@@ -23,14 +23,14 @@ abstract class TableType implements TableTypeInterface {
      * {@inheritdoc}
      */
     public function buildTable(TableBuilderInterface $builder, array $options) {
-        
+
     }
 
     /**
      * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver, array $defaultOptions) {
-        
+
         if (!class_exists($defaultOptions['data_provider'])) {
             throw new \UnexpectedValueException('data_provider must a valid class name');
         }
@@ -38,7 +38,7 @@ abstract class TableType implements TableTypeInterface {
         if (!$dataProvider instanceof DataProviderInterface) {
             throw new \InvalidArgumentException('data_provider must a string class name that implements \EMC\TableBundle\Provider\DataProviderInterface');
         }
-        
+
         $resolver->setDefaults(array(
             'name' => $this->getName(),
             'route' => $defaultOptions['route'],
@@ -174,7 +174,7 @@ abstract class TableType implements TableTypeInterface {
     }
 
     public function buildFooterView(array &$view, TableInterface $table) {
-        
+
     }
 
     /**
@@ -210,12 +210,10 @@ abstract class TableType implements TableTypeInterface {
      * {@inheritdoc}
      */
     public function buildQuery(QueryConfigInterface $query, TableInterface $table) {
-
+        $options = $table->getOptions();
         $select = array();
         $filters = array();
-        $orderBy = array();
-
-        $options = $table->getOptions();
+        $orderBy = $options['default_sorts'];
 
         if (count($options['subtable_params']) > 0) {
             $select = array_merge($select, $options['subtable_params']);
@@ -240,7 +238,7 @@ abstract class TableType implements TableTypeInterface {
             if (count($params) > 0) {
                 $select = array_merge($select, $params);
             }
-            
+
             $allowFilter = $column->resolveAllowedParams('allow_filter');
             if ($allowFilter !== null) {
                 $filters = array_merge($filters, $allowFilter);
@@ -296,7 +294,7 @@ abstract class TableType implements TableTypeInterface {
 
     /**
      * This method return TRUE if one or more columns allow filtering.
-     * 
+     *
      * @param \EMC\TableBundle\Table\TableInterface $table
      * @return boolean
      */
@@ -312,7 +310,7 @@ abstract class TableType implements TableTypeInterface {
 
     /**
      * This method populate $params with values in $data.<br/>
-     * 
+     *
      * @param array $params
      * @param array $data
      * @param bool $preserveKeys    Preserve or not the $params keys. Default false
